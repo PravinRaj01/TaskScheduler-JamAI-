@@ -95,6 +95,7 @@ st.markdown("Your scheduled tasks are fetched and arranged below.")
 # Fetch tasks (either cached or fresh, depending on refresh)
 fetched_tasks = fetch_tasks_from_table()
 
+# Display Scheduled Tasks
 if fetched_tasks:
     # Arrange tasks using the scheduler
     arranged_tasks = add_and_schedule_tasks(None, None, None, fetched_tasks)
@@ -106,13 +107,14 @@ if fetched_tasks:
     )
 
     # Display the table using AgGrid
-    gb = GridOptionsBuilder.from_dataframe(tasks_df)
+    gb = GridOptionsBuilder.from_dataframe(tasks_df.drop(columns=["id"]))
     gb.configure_default_column(editable=False, sortable=True, filterable=True)
     gb.configure_pagination(paginationAutoPageSize=True)
     grid_options = gb.build()
 
+    st.write("### Scheduled Tasks (Arranged)")
     AgGrid(
-        tasks_df,
+        tasks_df.drop(columns=["id"]),  # Exclude the `id` column from display
         gridOptions=grid_options,
         height=500,
         theme="material"
